@@ -66,10 +66,12 @@ const MemoryGame: React.FC = () => {
   }, [difficulty]);
   
   const handleLetterSelect = (letter: typeof letterOptions[0]) => {
+    console.log("letter: ",letter)
     if (gameState !== 'playing') return;
-    
+    console.log("Game is on ! ")
     // Check if the letter is already selected
     if (selectedLetters.some(l => l.char === letter.char && l.position === letter.position)) {
+      console.log("letter is 100% compatible")
       return;
     }
     
@@ -79,6 +81,7 @@ const MemoryGame: React.FC = () => {
     const expectedLength = currentWord?.letters.length || 0;
     if (newSelectedLetters.length === expectedLength) {
       // Check if the selection is correct using visual equivalence
+      console.log("cheking if they are visually the same")
       const isCorrect = newSelectedLetters.every((letter, index) => {
         const expected = currentWord?.letters[index];
         return (
@@ -88,9 +91,11 @@ const MemoryGame: React.FC = () => {
       });
       
       if (isCorrect) {
+        console.log("All letters match perfectly")
         setScore(prev => prev + 1);
         setGameState('success');
       } else {
+        console.log("not all letters match")
         setGameState('failed');
       }
     }
