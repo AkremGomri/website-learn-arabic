@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getRandomWord, ArabicWord } from '../../../data/arabicWords';
-import { shuffleArray, generateLetterOptions, areLetterFormsEquivalent } from '../../../utils/arabicUtils';
+import { shuffleArray } from '../../../utils/arabicUtils';
 import Button from '../../common/Button';
 import { RefreshCw, Check, X, Trophy, Clock3 } from 'lucide-react';
 
@@ -66,12 +66,10 @@ const MemoryGame: React.FC = () => {
   }, [difficulty]);
   
   const handleLetterSelect = (letter: typeof letterOptions[0]) => {
-    console.log("letter: ",letter)
     if (gameState !== 'playing') return;
-    console.log("Game is on ! ")
+    
     // Check if the letter is already selected
     if (selectedLetters.some(l => l.char === letter.char && l.position === letter.position)) {
-      console.log("letter is 100% compatible")
       return;
     }
     
@@ -80,24 +78,16 @@ const MemoryGame: React.FC = () => {
     
     const expectedLength = currentWord?.letters.length || 0;
     if (newSelectedLetters.length === expectedLength) {
-      // Check if the selection is correct using visual equivalence
-      console.log("cheking if they are visually the same")
+      // Check if the selection matches the correct letters exactly
       const isCorrect = newSelectedLetters.every((letter, index) => {
         const expected = currentWord?.letters[index];
-        console.log(`${letter.letterId} === ${expected?.letterId} : ${letter.letterId === expected?.letterId}`)
-        console.log(`areLetterFormsEquivalent(${letter.letterId}, ${letter.position}, ${expected?.position}) : ${areLetterFormsEquivalent(letter.letterId, letter.position, expected?.position)}`)
-        return (
-          letter.letterId === expected?.letterId &&
-          areLetterFormsEquivalent(letter.letterId, letter.position, expected?.position)
-        );
+        return letter.char === expected?.char && letter.position === expected?.position;
       });
       
       if (isCorrect) {
-        console.log("All letters match perfectly")
         setScore(prev => prev + 1);
         setGameState('success');
       } else {
-        console.log("not all letters match")
         setGameState('failed');
       }
     }

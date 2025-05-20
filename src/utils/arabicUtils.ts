@@ -123,6 +123,18 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   return newArray;
 };
 
+// Check if two letter forms would look identical
+const areFormsIdentical = (
+  letterId: string,
+  form1: string,
+  form2: string
+): boolean => {
+  const letter = arabicLetters.find(l => l.id === letterId);
+  if (!letter) return false;
+  
+  return letter[form1 as keyof ArabicLetter] === letter[form2 as keyof ArabicLetter];
+};
+
 // Generate an array of letter options including distractors
 export const generateLetterOptions = (
   correctLetters: Array<{char: string, position: string, letterId: string}>,
@@ -142,31 +154,53 @@ export const generateLetterOptions = (
   // We need to add some distractors
   const distractorsNeeded = numberOfOptions - markedCorrectLetters.length;
   const distractors = [];
+  const usedForms = new Set(correctLetters.map(l => `${l.letterId}-${l.position}`));
   
-  // Generate distractor options (similar letters in different positions)
-  for (let i = 0; i < distractorsNeeded; i++) {
-    // Get a random letter ID from the correct letters to create similar distractors
-    const randomLetterIndex = Math.floor(Math.random() * correctLetters.length);
-    const correctLetterId = correctLetters[randomLetterIndex].letterId;
-    
-    // Find the letter in our database
-    const letter = arabicLetters.find((l) => l.id === correctLetterId);
-    
+  // First, add different forms of the correct letters that don't look identical
+  for (const correctLetter of correctLetters) {
+    const letter = arabicLetters.find(l => l.id === correctLetter.letterId);
     if (!letter) continue;
     
-    // Choose a different position than the correct one
-    const positions = ['beginning', 'middle', 'end', 'isolated'];
-    const correctPosition = correctLetters[randomLetterIndex].position;
-    const filteredPositions = positions.filter(p => p !== correctPosition);
-    const randomPosition = filteredPositions[Math.floor(Math.random() * filteredPositions.length)] as 'beginning' | 'middle' | 'end' | 'isolated';
+    const positions = ['beginning', 'middle', 'end', 'isolated'] as const;
+    for (const pos of positions) {
+      const formKey = `${correctLetter.letterId}-${pos}`;
+      if (!usedForms.has(formKey) && !areFormsIdentical(correctLetter.letterId, correctLetter.position, pos)) {
+        distractors.push({
+          char: letter[pos],
+          position: pos,
+          letterId: correctLetter.letterId,
+          isCorrect: false
+        });
+        usedForms.add(formKey);
+        if (distractors.length >= distractorsNeeded) break;
+      }
+    }
+    if (distractors.length >= distractorsNeeded) break;
+  }
+  
+  // If we still need more distractors, add different letters
+  while (distractors.length < distractorsNeeded) {
+    // Get a random letter that's not in the correct letters
+    const availableLetters = arabicLetters.filter(l => 
+      !correctLetters.some(cl => cl.letterId === l.id)
+    );
     
-    // Add the distractor
-    distractors.push({
-      char: letter[randomPosition],
-      position: randomPosition,
-      letterId: correctLetterId,
-      isCorrect: false
-    });
+    if (availableLetters.length === 0) break;
+    
+    const randomLetter = availableLetters[Math.floor(Math.random() * availableLetters.length)];
+    const positions = ['beginning', 'middle', 'end', 'isolated'] as const;
+    const randomPosition = positions[Math.floor(Math.random() * positions.length)];
+    
+    const formKey = `${randomLetter.id}-${randomPosition}`;
+    if (!usedForms.has(formKey)) {
+      distractors.push({
+        char: randomLetter[randomPosition],
+        position: randomPosition,
+        letterId: randomLetter.id,
+        isCorrect: false
+      });
+      usedForms.add(formKey);
+    }
   }
   
   // Combine correct letters and distractors, then shuffle
