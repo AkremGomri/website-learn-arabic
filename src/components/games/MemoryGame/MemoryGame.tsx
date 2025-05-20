@@ -84,7 +84,7 @@ const MemoryGame: React.FC = () => {
       console.log("cheking if they are visually the same")
       const isCorrect = newSelectedLetters.every((letter, index) => {
         const expected = currentWord?.letters[index];
-        console.log(`${letter}.letterId === ${expected}?.letterId : ${letter.letterId === expected?.letterId}`)
+        console.log(`${letter.letterId} === ${expected?.letterId} : ${letter.letterId === expected?.letterId}`)
         console.log(`areLetterFormsEquivalent(${letter.letterId}, ${letter.position}, ${expected?.position}) : ${areLetterFormsEquivalent(letter.letterId, letter.position, expected?.position)}`)
         return (
           letter.letterId === expected?.letterId &&
