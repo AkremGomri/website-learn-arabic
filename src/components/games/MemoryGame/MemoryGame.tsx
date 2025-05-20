@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getRandomWord, ArabicWord } from '../../../data/arabicWords';
-import { shuffleArray } from '../../../utils/arabicUtils';
+import { shuffleArray, generateLetterOptions } from '../../../utils/arabicUtils';
 import Button from '../../common/Button';
 import { RefreshCw, Check, X, Trophy, Clock3 } from 'lucide-react';
 
