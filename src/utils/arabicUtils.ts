@@ -13,6 +13,45 @@ export const isLeftConnectable = (letterId: string): boolean => {
   return true;
 };
 
+// Check if two letter forms are visually equivalent
+export const areLetterFormsEquivalent = (
+  letterId: string,
+  form1: string,
+  form2?: string
+): boolean => {
+  if (!form2) return false;
+  
+  // If the forms are exactly the same, they're equivalent
+  if (form1 === form2) return true;
+  
+  // Special cases for letters with identical forms
+  const letter = arabicLetters.find(l => l.id === letterId);
+  if (!letter) return false;
+  
+  // Non-connectable letters have identical beginning and isolated forms
+  if (!isRightConnectable(letterId)) {
+    if (
+      (form1 === 'beginning' && form2 === 'isolated') ||
+      (form1 === 'isolated' && form2 === 'beginning')
+    ) {
+      return true;
+    }
+  }
+  
+  // Letters like alif have identical middle and end forms
+  const lettersWithIdenticalMiddleEnd = ['alif', 'dal', 'thal', 'ra', 'zai', 'waw', 'hamza'];
+  if (lettersWithIdenticalMiddleEnd.includes(letterId)) {
+    if (
+      (form1 === 'middle' && form2 === 'end') ||
+      (form1 === 'end' && form2 === 'middle')
+    ) {
+      return true;
+    }
+  }
+  
+  return false;
+};
+
 // Get vowel strength (for hamza placement)
 const getVowelStrength = (vowel?: string): number => {
   if (!vowel) return 0;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getRandomWord, ArabicWord } from '../../../data/arabicWords';
-import { shuffleArray, generateLetterOptions } from '../../../utils/arabicUtils';
+import { shuffleArray, generateLetterOptions, areLetterFormsEquivalent } from '../../../utils/arabicUtils';
 import Button from '../../common/Button';
 import { RefreshCw, Check, X, Trophy, Clock3 } from 'lucide-react';
 
@@ -34,7 +34,6 @@ const MemoryGame: React.FC = () => {
     setGameState('showing');
     setTimeLeft(5);
     
-    // Set up countdown timer
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -46,7 +45,6 @@ const MemoryGame: React.FC = () => {
           setIsWordVisible(false);
           setGameState('playing');
           
-          // Generate letter options
           const options = generateLetterOptions(word.letters, 12);
           setLetterOptions(options);
           
@@ -57,7 +55,6 @@ const MemoryGame: React.FC = () => {
     }, 1000);
   };
   
-  // Initialize the game
   useEffect(() => {
     startNewRound();
     
@@ -68,9 +65,7 @@ const MemoryGame: React.FC = () => {
     };
   }, [difficulty]);
   
-  // Handle letter selection
   const handleLetterSelect = (letter: typeof letterOptions[0]) => {
-    // Don't allow selection if not in playing state
     if (gameState !== 'playing') return;
     
     // Check if the letter is already selected
@@ -78,19 +73,17 @@ const MemoryGame: React.FC = () => {
       return;
     }
     
-    // Add the letter to selected letters
     const newSelectedLetters = [...selectedLetters, letter];
     setSelectedLetters(newSelectedLetters);
     
-    // Check if the selection is correct
     const expectedLength = currentWord?.letters.length || 0;
     if (newSelectedLetters.length === expectedLength) {
-      // Check order and correctness
+      // Check if the selection is correct using visual equivalence
       const isCorrect = newSelectedLetters.every((letter, index) => {
         const expected = currentWord?.letters[index];
         return (
           letter.letterId === expected?.letterId &&
-          letter.position === expected?.position
+          areLetterFormsEquivalent(letter.letterId, letter.position, expected?.position)
         );
       });
       
@@ -103,12 +96,10 @@ const MemoryGame: React.FC = () => {
     }
   };
   
-  // Reset the letter selection
   const resetSelection = () => {
     setSelectedLetters([]);
   };
   
-  // Change difficulty
   const changeDifficulty = (newDifficulty: 'easy' | 'medium' | 'hard') => {
     setDifficulty(newDifficulty);
     setScore(0);
@@ -131,7 +122,6 @@ const MemoryGame: React.FC = () => {
           </div>
         </div>
         
-        {/* Difficulty selector */}
         <div className="mb-6">
           <div className="flex justify-center space-x-4 rtl:space-x-reverse">
             <button
@@ -167,7 +157,6 @@ const MemoryGame: React.FC = () => {
           </div>
         </div>
         
-        {/* Game area */}
         <div className="bg-orange-50 p-6 rounded-lg">
           {gameState === 'showing' && currentWord && (
             <div className="text-center">
@@ -193,7 +182,6 @@ const MemoryGame: React.FC = () => {
                 حان دورك! اختر الحروف بالترتيب الصحيح
               </h3>
               
-              {/* Selected Letters */}
               <div className="min-h-16 bg-white p-4 rounded-lg shadow-inner mb-6 flex justify-center items-center">
                 {selectedLetters.length > 0 ? (
                   <div className="flex space-x-2 rtl:space-x-reverse">
@@ -211,7 +199,6 @@ const MemoryGame: React.FC = () => {
                 )}
               </div>
               
-              {/* Letter options */}
               <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mb-4">
                 {letterOptions.map((letter, index) => (
                   <div
