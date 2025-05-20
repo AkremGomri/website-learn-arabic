@@ -30,7 +30,7 @@ export const arabicWords: ArabicWord[] = [
       { char: getLetterForm('kaf', 'beginning'), position: 'beginning', letterId: 'kaf', vowel: 'ِ' },
       { char: getLetterForm('ta', 'middle'), position: 'middle', letterId: 'ta', vowel: 'َ' },
       { char: getLetterForm('alif', 'middle'), position: 'middle', letterId: 'alif' }, // No vowel on alif
-      { char: getLetterForm('ba', 'isolated'), position: 'end', letterId: 'ba', vowel: 'ٌ' }
+      { char: getLetterForm('ba', 'isolated'), position: 'isolated', letterId: 'ba', vowel: 'ٌ' }
     ]
   },
   {
@@ -52,7 +52,7 @@ export const arabicWords: ArabicWord[] = [
     letters: [
       { char: getLetterForm('ba', 'beginning'), position: 'beginning', letterId: 'ba', vowel: 'َ' },
       { char: getLetterForm('alif', 'middle'), position: 'middle', letterId: 'alif' },
-      { char: getLetterForm('ba', 'isolated'), position: 'end', letterId: 'ba', vowel: 'ٌ' }
+      { char: getLetterForm('ba', 'isolated'), position: 'isolated', letterId: 'ba', vowel: 'ٌ' }
     ]
   },
   {
@@ -84,7 +84,7 @@ export const arabicWords: ArabicWord[] = [
     letters: [
       { char: getLetterForm('mim', 'beginning'), position: 'beginning', letterId: 'mim', vowel: 'َ' },
       { char: getLetterForm('alif', 'middle'), position: 'middle', letterId: 'alif' },
-      { char: getLetterForm('hamza', 'isolated'), position: 'end', letterId: 'hamza', vowel: 'ٌ' }
+      { char: getLetterForm('hamza', 'isolated'), position: 'isolated', letterId: 'hamza', vowel: 'ٌ' }
     ]
   },
   {
@@ -129,7 +129,7 @@ export const arabicWords: ArabicWord[] = [
       { char: getLetterForm('ha', 'beginning'), position: 'beginning', letterId: 'ha', vowel: 'ِ' },
       { char: getLetterForm('sad', 'middle'), position: 'middle', letterId: 'sad', vowel: 'َ' },
       { char: getLetterForm('alif', 'middle'), position: 'middle', letterId: 'alif' },
-      { char: getLetterForm('nun', 'isolated'), position: 'end', letterId: 'nun', vowel: 'ٌ' }
+      { char: getLetterForm('nun', 'isolated'), position: 'isolated', letterId: 'nun', vowel: 'ٌ' }
     ]
   }
 ];
