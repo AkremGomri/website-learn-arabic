@@ -5,7 +5,7 @@ import { arabicLetters } from '../data/arabicLetters';
 export const isRightConnectable = (letterId: string): boolean => {
   const nonConnectableLetters = ['alif', 'dal', 'thal', 'ra', 'zai', 'waw'];
   return !nonConnectableLetters.includes(letterId);
-};
+};generateLetterOptions
 
 // Check if a letter is connectable from left side (can be connected to the previous letter)
 export const isLeftConnectable = (letterId: string): boolean => {
