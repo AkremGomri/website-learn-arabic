@@ -1,0 +1,3 @@
+- Third Game issues:
+	1) The game accepts certain letter forms (e.g: alif in the middle) but not others (e.g: alif in the end) despite them having the exact same form.
+	2) The application only suggests letters from the letters composing the word, and not other non existing letters (It is better to be able to choose whether to include both letters contained in the word and the rest of the letters or to keep only letters contained in the word).
