@@ -135,6 +135,7 @@ const areFormsIdentical = (
   console.log("letter: ",letter)
   console.log("letter[form1 as keyof ArabicLetter]: ",letter[form1 as keyof ArabicLetter])
   console.log("letter[form2 as keyof ArabicLetter]: ",letter[form2 as keyof ArabicLetter])
+  console.log("result: ",letter[form1 as keyof ArabicLetter] === letter[form2 as keyof ArabicLetter])
   return letter[form1 as keyof ArabicLetter] === letter[form2 as keyof ArabicLetter];
 };
 
