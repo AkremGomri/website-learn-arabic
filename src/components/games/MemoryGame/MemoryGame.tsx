@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getRandomWord, ArabicWord } from '../../../data/arabicWords';
+import { getRandomWord, ArabicWord, arabicWords } from '../../../data/arabicWords';
 import { shuffleArray, generateLetterOptions } from '../../../utils/arabicUtils';
 import Button from '../../common/Button';
 import { RefreshCw, Check, X, Trophy, Clock3 } from 'lucide-react';
+import { useLetters } from '../../../context/LetterContext';
 
 const MemoryGame: React.FC = () => {
   const [currentWord, setCurrentWord] = useState<ArabicWord | null>(null);
@@ -20,14 +21,34 @@ const MemoryGame: React.FC = () => {
     isCorrect: boolean;
   }[]>([]);
   const [score, setScore] = useState(0);
-  const [gameState, setGameState] = useState<'loading' | 'showing' | 'playing' | 'success' | 'failed'>('loading');
+  const [gameState, setGameState] = useState<'loading' | 'showing' | 'playing' | 'success' | 'failed' | 'no-words'>('loading');
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
   const [timeLeft, setTimeLeft] = useState(5);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { getSelectedLetters, ensureLettersSelected } = useLetters();
+  
+  // Get words that only contain selected letters
+  const getAvailableWords = (selectedLetterIds: string[]) => {
+    return arabicWords.filter(word => 
+      word.letters.every(letter => selectedLetterIds.includes(letter.letterId))
+    );
+  };
   
   // Start a new round
   const startNewRound = () => {
-    const word = getRandomWord(difficulty);
+    const selectedLetterIds = getSelectedLetters();
+    const availableWords = getAvailableWords(selectedLetterIds).filter(word => 
+      word.difficulty === difficulty
+    );
+    
+    if (availableWords.length === 0) {
+      setGameState('no-words');
+      return;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * availableWords.length);
+    const word = availableWords[randomIndex];
+    
     setCurrentWord(word);
     setIsWordVisible(true);
     setSelectedLetters([]);
@@ -45,7 +66,9 @@ const MemoryGame: React.FC = () => {
           setIsWordVisible(false);
           setGameState('playing');
           
-          const options = generateLetterOptions(word.letters, 12);
+          // Generate options only from selected letters
+          const options = generateLetterOptions(word.letters, 12)
+            .filter(option => selectedLetterIds.includes(option.letterId));
           setLetterOptions(options);
           
           return 0;
@@ -56,6 +79,7 @@ const MemoryGame: React.FC = () => {
   };
   
   useEffect(() => {
+    ensureLettersSelected();
     startNewRound();
     
     return () => {
@@ -68,7 +92,6 @@ const MemoryGame: React.FC = () => {
   const handleLetterSelect = (letter: typeof letterOptions[0]) => {
     if (gameState !== 'playing') return;
     
-    // Check if the letter is already selected
     if (selectedLetters.some(l => l.char === letter.char && l.position === letter.position)) {
       return;
     }
@@ -78,7 +101,6 @@ const MemoryGame: React.FC = () => {
     
     const expectedLength = currentWord?.letters.length || 0;
     if (newSelectedLetters.length === expectedLength) {
-      // Check if the selection matches the correct letters exactly
       const isCorrect = newSelectedLetters.every((letter, index) => {
         const expected = currentWord?.letters[index];
         return letter.char === expected?.char && letter.position === expected?.position;
@@ -102,6 +124,27 @@ const MemoryGame: React.FC = () => {
     setScore(0);
     startNewRound();
   };
+  
+  if (gameState === 'no-words') {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+          <h2 className="text-2xl font-bold text-orange-600 mb-4">
+            لا توجد كلمات متاحة
+          </h2>
+          <p className="text-gray-600 mb-6">
+            لا توجد كلمات متاحة تتكون فقط من الحروف التي اخترتها. الرجاء اختيار المزيد من الحروف للعب.
+          </p>
+          <Button
+            variant="primary"
+            onClick={() => window.location.href = '/select-letters'}
+          >
+            اختيار المزيد من الحروف
+          </Button>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="max-w-4xl mx-auto p-6">
