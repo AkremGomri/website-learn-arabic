@@ -70,6 +70,7 @@ const MemoryGame: React.FC = () => {
           const options = generateLetterOptions(word.letters, 12)
             .filter(option => selectedLetterIds.includes(option.letterId));
           setLetterOptions(options);
+          console.log("options: ",options)
           
           return 0;
         }
@@ -79,6 +80,7 @@ const MemoryGame: React.FC = () => {
   };
   
   useEffect(() => {
+    console.log("Hello there")
     ensureLettersSelected();
     startNewRound();
     
