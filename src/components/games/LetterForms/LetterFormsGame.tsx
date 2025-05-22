@@ -1,24 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArabicLetter, getRandomLetter } from '../../../data/arabicLetters';
+import { ArabicLetter, getRandomLetter, arabicLetters } from '../../../data/arabicLetters';
 import LetterCard from '../../common/LetterCard';
 import Button from '../../common/Button';
 import { RefreshCw as Refresh, MoveLeft, Volume2 } from 'lucide-react';
+import { useLetters } from '../../../context/LetterContext';
 
 const LetterFormsGame: React.FC = () => {
   const [currentLetter, setCurrentLetter] = useState<ArabicLetter | null>(null);
   const [showForms, setShowForms] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const { getSelectedLetters, ensureLettersSelected } = useLetters();
   
-  // Get a new random letter
+  // Get a new random letter from selected letters
   const getNewLetter = useCallback(() => {
-    setCurrentLetter(getRandomLetter());
+    const selectedLetterIds = getSelectedLetters();
+    const selectedLetters = arabicLetters.filter(letter => selectedLetterIds.includes(letter.id));
+    const randomIndex = Math.floor(Math.random() * selectedLetters.length);
+    setCurrentLetter(selectedLetters[randomIndex]);
     setShowForms(false);
-  }, []);
+  }, [getSelectedLetters]);
   
-  // Initialize with a random letter
+  // Initialize with a random letter and ensure letters are selected
   useEffect(() => {
+    ensureLettersSelected();
     getNewLetter();
-  }, [getNewLetter]);
+  }, [getNewLetter, ensureLettersSelected]);
   
   // Handle recording pronunciation (placeholder for speech recognition)
   const handleRecordPronunciation = () => {
@@ -70,7 +76,6 @@ const LetterFormsGame: React.FC = () => {
               <button
                 className="inline-flex items-center justify-center ml-2 text-teal-600 hover:text-teal-700"
                 onClick={() => {
-                  // For a real app, this would play the actual audio file
                   if ('speechSynthesis' in window) {
                     const utterance = new SpeechSynthesisUtterance(currentLetter.pronunciation);
                     utterance.lang = 'ar';
