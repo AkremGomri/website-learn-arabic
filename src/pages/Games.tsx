@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Book, Sparkles, Brain } from 'lucide-react';
 import Button from '../components/common/Button';
+import { useLetters } from '../context/LetterContext';
 
 const Games: React.FC = () => {
+  const { ensureLettersSelected } = useLetters();
+
+  useEffect(() => {
+    ensureLettersSelected();
+  }, [ensureLettersSelected]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-purple-50 py-10">
       <div className="max-w-4xl mx-auto px-4">
@@ -52,8 +59,8 @@ const Games: React.FC = () => {
             
             <div className="p-6">
               <p className="text-gray-600 mb-6 h-24">
-                اختر الحروف التي تريد التدرب عليها وحدد طول الكلمة. سنقوم بإنشاء كلمات مخصصة 
-                تتكون فقط من الحروف التي اخترتها.
+                تدرب على الحروف التي اخترتها من خلال كلمات مخصصة 
+                تتكون فقط من الحروف التي تعرفها.
               </p>
               
               <Link to="/word-generator">
@@ -78,8 +85,8 @@ const Games: React.FC = () => {
             
             <div className="p-6">
               <p className="text-gray-600 mb-6 h-24">
-                اختبر قدرتك على تذكر الكلمات العربية. شاهد الكلمة لمدة 5 ثوانٍ، ثم حاول 
-                إعادة تكوينها باختيار الحروف بالترتيب الصحيح.
+                اختبر قدرتك على تذكر الكلمات المكونة من الحروف التي تعرفها. شاهد الكلمة لمدة 5 ثوانٍ، ثم 
+                أعد تكوينها.
               </p>
               
               <Link to="/memory-game">
@@ -92,9 +99,9 @@ const Games: React.FC = () => {
         </div>
         
         <div className="mt-12 text-center">
-          <Link to="/">
+          <Link to="/select-letters">
             <Button variant="outline" size="lg">
-              العودة للصفحة الرئيسية
+              تعديل الحروف المختارة
             </Button>
           </Link>
         </div>
