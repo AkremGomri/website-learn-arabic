@@ -1,3 +1,14 @@
+22/05/2025:
 - Third Game issues:
 	1) The game accepts certain letter forms (e.g: alif in the middle) but not others (e.g: alif in the end) despite them having the exact same form.
 	2) The application only suggests letters from the letters composing the word, and not other non existing letters (It is better to be able to choose whether to include both letters contained in the word and the rest of the letters or to keep only letters contained in the word).
+
+Fixed:
+ 1) a user is required to select letters he knows before any game, only the selected letters he will see in the game.
+ 2) The third game will choose other letters if all correct letters have been chosen with all possible forms (excluding forms which resembles other forms for the same letter).
+
+New Issues:
+	-) The third game does not give the user to a possibility choose between proposing letters beyond those composing the word (but does never suggest letters unknown to the user) or stick with the same letters composing the word.
+        -) Despite no duplicates (different forms of the same letter but they are look identical) for correct choices (letter & form) but it is not the case for wrong suggestions.
+        -) In the first game, the sounds for letters still does not work
+        -) In the second game, Arabic rules are not perfectly matched
