@@ -15,43 +15,43 @@ export const isLeftConnectable = (letterId: string): boolean => {
 };
 
 // Check if two letter forms are visually equivalent
-export const areLetterFormsEquivalent = (
-  letterId: string,
-  form1: string,
-  form2?: string
-): boolean => {
-  if (!form2) return false;
+// export const areLetterFormsEquivalent = (
+//   letterId: string,
+//   form1: string,
+//   form2?: string
+// ): boolean => {
+//   if (!form2) return false;
   
-  // If the forms are exactly the same, they're equivalent
-  if (form1 === form2) return true;
+//   // If the forms are exactly the same, they're equivalent
+//   if (form1 === form2) return true;
   
-  // Special cases for letters with identical forms
-  const letter = arabicLetters.find(l => l.id === letterId);
-  if (!letter) return false;
+//   // Special cases for letters with identical forms
+//   const letter = arabicLetters.find(l => l.id === letterId);
+//   if (!letter) return false;
   
-  // Non-connectable letters have identical beginning and isolated forms
-  if (!isLeftConnectable(letterId)) {
-    if (
-      (form1 === 'beginning' && form2 === 'isolated') ||
-      (form1 === 'isolated' && form2 === 'beginning')
-    ) {
-      return true;
-    }
-  }
+//   // Non-connectable letters have identical beginning and isolated forms
+//   if (!isLeftConnectable(letterId)) {
+//     if (
+//       (form1 === 'beginning' && form2 === 'isolated') ||
+//       (form1 === 'isolated' && form2 === 'beginning')
+//     ) {
+//       return true;
+//     }
+//   }
   
-  // Letters like alif have identical middle and end forms
-  const lettersWithIdenticalMiddleEnd = ['alif', 'dal', 'thal', 'ra', 'zai', 'waw', 'hamza'];
-  if (lettersWithIdenticalMiddleEnd.includes(letterId)) {
-    if (
-      (form1 === 'middle' && form2 === 'end') ||
-      (form1 === 'end' && form2 === 'middle')
-    ) {
-      return true;
-    }
-  }
+//   // Letters like alif have identical middle and end forms
+//   const lettersWithIdenticalMiddleEnd = ['alif', 'dal', 'thal', 'ra', 'zai', 'waw', 'hamza'];
+//   if (lettersWithIdenticalMiddleEnd.includes(letterId)) {
+//     if (
+//       (form1 === 'middle' && form2 === 'end') ||
+//       (form1 === 'end' && form2 === 'middle')
+//     ) {
+//       return true;
+//     }
+//   }
   
-  return false;
-};
+//   return false;
+// };
 
 // Get vowel strength (for hamza placement)
 const getVowelStrength = (vowel?: string): number => {
@@ -132,7 +132,9 @@ const areFormsIdentical = (
 ): boolean => {
   const letter = arabicLetters.find(l => l.id === letterId);
   if (!letter) return false;
-  
+  console.log("letter: ",letter)
+  console.log("letter[form1 as keyof ArabicLetter]: ",letter[form1 as keyof ArabicLetter])
+  console.log("letter[form2 as keyof ArabicLetter]: ",letter[form2 as keyof ArabicLetter])
   return letter[form1 as keyof ArabicLetter] === letter[form2 as keyof ArabicLetter];
 };
 
