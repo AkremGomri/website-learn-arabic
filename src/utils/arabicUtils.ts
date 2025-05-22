@@ -3,14 +3,15 @@ import { arabicLetters } from '../data/arabicLetters';
 
 // Check if a letter is connectable from right side (can be connected to the next letter)
 export const isRightConnectable = (letterId: string): boolean => {
-  const nonConnectableLetters = ['alif', 'dal', 'thal', 'ra', 'zai', 'waw'];
-  return !nonConnectableLetters.includes(letterId);
-};generateLetterOptions
+  // All Arabic letters can connect to the next letter
+  return true;
+};
 
 // Check if a letter is connectable from left side (can be connected to the previous letter)
 export const isLeftConnectable = (letterId: string): boolean => {
-  // All Arabic letters can be connected from the left side
-  return true;
+  // These letters cannot be connected from the left side
+  const nonConnectableLetters = ['alif', 'dal', 'thal', 'ra', 'zai', 'waw'];
+  return !nonConnectableLetters.includes(letterId);
 };
 
 // Check if two letter forms are visually equivalent
@@ -29,7 +30,7 @@ export const areLetterFormsEquivalent = (
   if (!letter) return false;
   
   // Non-connectable letters have identical beginning and isolated forms
-  if (!isRightConnectable(letterId)) {
+  if (!isLeftConnectable(letterId)) {
     if (
       (form1 === 'beginning' && form2 === 'isolated') ||
       (form1 === 'isolated' && form2 === 'beginning')
@@ -106,11 +107,11 @@ export const getLetterForm = (
 
   // If it's the last letter
   if (position === wordLength - 1) {
-    return 'end';
+    return isLeftConnectable(letterId) ? 'end' : 'isolated';
   }
 
   // If it's a middle letter
-  return isRightConnectable(letterId) ? 'middle' : 'isolated';
+  return isLeftConnectable(letterId) && isRightConnectable(letterId) ? 'middle' : 'isolated';
 };
 
 // Shuffle an array (for randomizing options)
