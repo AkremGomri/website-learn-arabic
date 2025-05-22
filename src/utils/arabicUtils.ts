@@ -132,7 +132,9 @@ const areFormsIdentical = (
 ): boolean => {
   const letter = arabicLetters.find(l => l.id === letterId);
   if (!letter) return false;
-  
+  print("letter: ",letter)
+  print("letter[form1 as keyof ArabicLetter]: ",letter[form1 as keyof ArabicLetter])
+  print("letter[form2 as keyof ArabicLetter]: ",letter[form2 as keyof ArabicLetter])
   return letter[form1 as keyof ArabicLetter] === letter[form2 as keyof ArabicLetter];
 };
 
