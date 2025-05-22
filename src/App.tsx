@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/common/Header';
 import Home from './pages/Home';
 import Games from './pages/Games';
+import LetterSelection from './pages/LetterSelection';
 import LetterFormsGame from './components/games/LetterForms/LetterFormsGame';
 import WordGeneratorGame from './components/games/WordGenerator/WordGeneratorGame';
 import MemoryGame from './components/games/MemoryGame/MemoryGame';
@@ -15,6 +16,7 @@ function App() {
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/select-letters" element={<LetterSelection />} />
             <Route path="/games" element={<Games />} />
             <Route path="/letter-forms" element={<LetterFormsGame />} />
             <Route path="/word-generator" element={<WordGeneratorGame />} />
